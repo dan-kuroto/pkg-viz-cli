@@ -41,24 +41,28 @@ export function getDependency(pkgDir: string): Dependency | null {
 /**
  * Analyze the project and return the dependencies
  */
-export function pkgAnalyze(pkgDir: string): Dependency[] {
+export function pkgAnalyze(rootDir: string): Dependency[] {
   const visited = new Map<string, Dependency>(); // '{name}\n{version}' -> dependency
-  const toVisit = [pkgDir]; // dependency path to visit
+  const toVisit = [rootDir]; // dependency path to visit
 
   while (toVisit.length > 0) {
     const currPath = toVisit.shift() as string;
 
-    const dependency = getDependency(currPath) as Dependency;
-    // TODO: dependency的null处理最后做，否则会漏掉东西
-    //       '{pkgDir}\node_modules\{name}'不是唯一的存放点，也可能node_modules递归
-    //       package.json里的版本不准确，可能有^和*之类的特殊符号表示模糊的区间
-    console.log(currPath, dependency);
+    const dependency = getDependency(currPath);
+    // TODO: package.json里的版本不准确，可能有^和*之类的特殊符号表示模糊的区间
+    if (dependency === null) {
+      continue;
+    }
     visited.set(`${dependency.name}\n${dependency.version}`, dependency);
     for (const son of dependency.dependencies ?? []) {
-      const key = `${son.name}|${son.version}`;
+      const key = `${son.name}\n${son.version}`;
       if (!visited.has(key)) {
         if (!son.dev) {
-          toVisit.push(path.join(pkgDir, NODE_MODULES_DIRNAME, son.name));
+          let sonDir = path.join(currPath, NODE_MODULES_DIRNAME, son.name);
+          if (!fs.existsSync(sonDir)) {
+            sonDir = path.join(rootDir, NODE_MODULES_DIRNAME, son.name);
+          }
+          toVisit.push(sonDir);
         }
         visited.set(key, son);
       }
