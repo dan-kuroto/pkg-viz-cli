@@ -22,5 +22,8 @@
     "eslint": "^8.48.0",
     "typescript": "^5.2.2",
     "vitest": "^0.34.3"
+  },
+  "dependencies": {
+    "commander": "^11.0.0"
   }
 }

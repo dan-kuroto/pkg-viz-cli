@@ -18,20 +18,20 @@ export function getDependency(pkgDir: string): Dependency | null {
   try {
     const packageJsonPath = path.join(pkgDir, PACKAGE_JSON_FILENAME);
     const data = JSON.parse(
-        fs.readFileSync(packageJsonPath, {encoding: 'utf-8'}),
+      fs.readFileSync(packageJsonPath, { encoding: 'utf-8' }),
     ) as PackageJson;
     data.dependencies ??= {};
     data.devDependencies ??= {};
 
     const dependencies: Dependency[] = [];
     for (const name of Object.keys(data.dependencies)) {
-      dependencies.push({name, version: data.dependencies[name], dev: false});
+      dependencies.push({ name, version: data.dependencies[name], dev: false });
     }
     for (const name of Object.keys(data.devDependencies)) {
-      dependencies.push({name, version: data.devDependencies[name], dev: true});
+      dependencies.push({ name, version: data.devDependencies[name], dev: true });
     }
 
-    return {name: data.name, version: data.version, dependencies, dev: false};
+    return { name: data.name, version: data.version, dependencies, dev: false };
   } catch (err) {
     // 如果要检验的话，校验点太多没完没了，直接一个try-catch暴力解决
     return null;
@@ -41,7 +41,7 @@ export function getDependency(pkgDir: string): Dependency | null {
 /**
  * Analyze the project and return the dependencies
  */
-export function pkgAnalyze(rootDir: string): Dependency[] {
+export function pkgAnalyze(rootDir: string, depth: number = Infinity): Dependency[] {
   const visited = new Map<string, Dependency>(); // '{name}\n{version}' -> dependency
   const toVisit = [rootDir]; // dependency path to visit
 
