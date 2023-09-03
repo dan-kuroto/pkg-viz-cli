@@ -1,7 +1,8 @@
 export interface Dependency {
-    name: string;
-    version: string;
-    dev: boolean;
+    name?: string;
+    version?: string;
+    dev?: boolean;
+    path?: string;
     dependencies?: Dependency[];
 }
 

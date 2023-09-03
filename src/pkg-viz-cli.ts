@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { program } from "commander";
+import * as fs from "fs";
 
 import { pkgAnalyze } from './utils';
 
@@ -21,4 +22,9 @@ const options = program.version('1.0.0')
 const depth = toInt(options.depth, Infinity);
 const filePath = options.json ? String(options.json) : '';
 
-const packages = pkgAnalyze(process.cwd(), depth);
+const dependency = pkgAnalyze(process.cwd(), depth);
+if (filePath) {
+    fs.writeFileSync(filePath, JSON.stringify(dependency));
+} else {
+    console.error('convert to gragh (developing ...)');
+}
