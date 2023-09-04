@@ -4,6 +4,7 @@ export interface Dependency {
     dev?: boolean;
     path?: string;
     dependencies?: Dependency[];
+    depth?: number;
 }
 
 export interface PackageJson {

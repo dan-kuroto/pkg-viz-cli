@@ -52,7 +52,7 @@ export function getDependency(pkgDir: string, dependency: Dependency = {}): Depe
  */
 export function pkgAnalyze(rootDir: string, depth: number = Infinity): Dependency {
   const visited = new Map<string, Dependency>(); // '{name}\n{version}' -> dependency
-  const toVisit: Dependency[] = [{ path: rootDir }]; // dependency
+  const toVisit: Dependency[] = [{ path: rootDir, depth: 0 }]; // dependency
   const root = toVisit[0];
 
   while (toVisit.length > 0) {
@@ -67,7 +67,12 @@ export function pkgAnalyze(rootDir: string, depth: number = Infinity): Dependenc
       continue;
     }
     visited.set(key, dependency);
+
     if (dependency.dev === true) {
+      continue;
+    }
+    if (dependency.depth === depth) {
+      delete dependency.dependencies;
       continue;
     }
     for (const son of dependency.dependencies ?? []) {
@@ -78,6 +83,7 @@ export function pkgAnalyze(rootDir: string, depth: number = Infinity): Dependenc
       if (fs.existsSync(sonDir)) {
         son.path = sonDir;
       }
+      son.depth = (dependency.depth ?? 0) + 1;
       toVisit.push(son);
     }
   }
