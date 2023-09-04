@@ -26,7 +26,11 @@ const indent = toInt(options.indent, 2);
 
 const dependency = pkgAnalyze(process.cwd(), depth);
 if (filePath) {
-    fs.writeFileSync(filePath, JSON.stringify(dependency, undefined, indent));
+    fs.writeFileSync(filePath, JSON.stringify(
+        dependency,
+        (key: string, value: any) => key === 'depth' ? undefined : value,
+        indent
+    ));
 } else {
     console.error('convert to gragh (developing ...)');
 }
