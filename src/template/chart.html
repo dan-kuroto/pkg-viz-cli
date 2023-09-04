@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[[title]]</title>
+</head>
+<body>
+    <div id="app" style="width: 100%; height: 98vh;"></div>
+    <script src="[[echarts.js]]"></script>
+    <script>
+        (function() {
+            console.log('start');
+            var myChart = echarts.init(document.getElementById('app'));
+            myChart.setOption([[option]]);
+            console.log('end');
+        })();
+    </script>
+</body>
+</html>

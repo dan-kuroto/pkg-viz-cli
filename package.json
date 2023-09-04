@@ -24,8 +24,6 @@
     "vitest": "^0.34.3"
   },
   "dependencies": {
-    "commander": "^11.0.0",
-    "echarts": "^5.4.3",
-    "open": "^9.1.0"
+    "commander": "^11.0.0"
   }
 }

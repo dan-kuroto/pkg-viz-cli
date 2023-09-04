@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 import { program } from "commander";
 import * as fs from "fs";
-import * as echarts from "echarts";
 import * as os from "os";
 import * as path from "path";
-import open from "open";
+import { exec } from "child_process";
 import { pkgAnalyze } from './utils';
+import { generateChart } from './chart';
 
 
 function toInt(obj: any, defaultValue: number = 0) {
@@ -14,6 +14,28 @@ function toInt(obj: any, defaultValue: number = 0) {
         value = defaultValue;
     }
     return value;
+}
+
+function openBrowser(url: string) {
+    let command: string;
+    switch (os.platform()) {
+        case 'win32':
+            command = `start ${url}`;
+            break;
+        case 'linux':
+        case 'darwin':
+            command = `xdg-open ${url}`;
+            break;
+        default:
+            console.error('Currently, it is not supported to open the browser in this OS');
+            return;
+    }
+    exec(command, (error, stdout, stderr) => {
+        if (error) {
+            console.error('Failed to open browser');
+            return;
+        }
+    });
 }
 
 const options = program.version('1.0.0')
@@ -26,6 +48,7 @@ const options = program.version('1.0.0')
 const depth = toInt(options.depth, Infinity);
 const jsonPath = options.json ? String(options.json) : '';
 const indent = toInt(options.indent, 2);
+const runPath = path.dirname((path.dirname(process.argv[1])));
 
 const [dependency,] = pkgAnalyze(process.cwd(), depth);
 if (jsonPath) {
@@ -35,11 +58,7 @@ if (jsonPath) {
         indent
     ));
 } else {
-    const chartName = new Date().getTime();
-    const chartPath = path.join(os.tmpdir(), 'pkg-viz', `${chartName}.html`);
-    const chart = echarts.init(document.createElement('div'));
-    // 暂时用echarts给的示例，先测出能不能正常生成HTML=>保存=>打开浏览器
-    chart.setOption({
+    const chartOption = {
         title: {
             text: 'Basic Graph'
         },
@@ -130,11 +149,21 @@ if (jsonPath) {
                 }
             }
         ]
-    });
+    };
+
+    const chartName = new Date().getTime();
+    const chartDir = path.join(os.tmpdir(), 'pkg-viz');
+    if (!fs.existsSync(chartDir)) {
+        fs.mkdirSync(chartDir);
+    }
+    const chartPath = path.join(chartDir, `${chartName}.html`);
     fs.writeFileSync(
         chartPath,
-        chart.getDom().outerHTML
+        generateChart(
+            path.join(runPath, 'src', 'template'),
+            chartOption
+        ),
+        { encoding: 'utf-8' }
     );
-    console.log(chartPath);
-    open(`file://${chartPath}`);
+    openBrowser(`file://${chartPath}`);
 }
