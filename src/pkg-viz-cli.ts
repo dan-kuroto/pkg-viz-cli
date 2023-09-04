@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 import { program } from "commander";
 import * as fs from "fs";
-
+import * as echarts from "echarts";
+import * as os from "os";
+import * as path from "path";
 import { pkgAnalyze } from './utils';
 
 
@@ -32,5 +34,12 @@ if (filePath) {
         indent
     ));
 } else {
-    console.error('convert to gragh (developing ...)');
+    const chart = echarts.init(document.createElement('div'));
+    chart.setOption({});
+    
+    // TODO: 还是不要用tmpdir了，在自己的目录下创建一个tmp，然后每次运行时删除超过一天的
+    // fs.writeFileSync(
+    //     path.join(os.tmpdir(), `${new Date().getTime}.html`),
+    //     chart.getDom().outerHTML
+    // );
 }
