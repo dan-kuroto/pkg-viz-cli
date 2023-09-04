@@ -24,7 +24,7 @@ const depth = toInt(options.depth, Infinity);
 const filePath = options.json ? String(options.json) : '';
 const indent = toInt(options.indent, 2);
 
-const dependency = pkgAnalyze(process.cwd(), depth);
+const [dependency,] = pkgAnalyze(process.cwd(), depth);
 if (filePath) {
     fs.writeFileSync(filePath, JSON.stringify(
         dependency,

@@ -12,6 +12,6 @@ test('pkgAnalyze', () => {
         .map(name => path.join(rootPath, name));
 
     for (const project of projects) {
-        const dependency = pkgAnalyze(project);
+        const [dependency,] = pkgAnalyze(project);
     }
 });
