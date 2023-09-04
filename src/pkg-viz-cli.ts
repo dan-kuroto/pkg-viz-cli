@@ -14,17 +14,19 @@ function toInt(obj: any, defaultValue: number = 0) {
 }
 
 const options = program.version('1.0.0')
-    .option('-d, --depth <depth>', 'depth')
-    .option('--json <file-path>', 'file-path')
+    .option('-d, --depth <depth>', 'recursion depth')
+    .option('--json <file-path>', 'output file path')
+    .option('--indent <indent>', 'json indent')
     .parse(process.argv)
     .opts();
 
 const depth = toInt(options.depth, Infinity);
 const filePath = options.json ? String(options.json) : '';
+const indent = toInt(options.indent, 2);
 
 const dependency = pkgAnalyze(process.cwd(), depth);
 if (filePath) {
-    fs.writeFileSync(filePath, JSON.stringify(dependency));
+    fs.writeFileSync(filePath, JSON.stringify(dependency, undefined, indent));
 } else {
     console.error('convert to gragh (developing ...)');
 }
