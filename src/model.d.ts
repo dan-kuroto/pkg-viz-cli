@@ -35,6 +35,9 @@ export interface ChartSeries {
 export interface ChartNodeData {
     name: string;
     draggable?: boolean;
+    itemStyle?: {
+        color?: string | string[];
+    };
 }
 
 export interface ChartNodeLink {

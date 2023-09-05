@@ -71,10 +71,16 @@ export function dependencyMap2ChartNode(map: Map<string, Dependency>): [ChartNod
     const links: ChartNodeLink[] = [];
     for (const dependency of map.values()) {
         const sourceName = getChartNodeNameByDependency(dependency);
-        data.push({
+        const node: ChartNodeData = {
             name: sourceName,
             draggable: true,
-        });
+        };
+        if (dependency.dev === true) {
+            node.itemStyle = {
+                color: '#ee548e'
+            };
+        }
+        data.push(node);
         for (const son of dependency.dependencies ?? []) {
             links.push({ source: sourceName, target: getChartNodeNameByDependency(son) });
         }
