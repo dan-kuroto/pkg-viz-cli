@@ -5,7 +5,7 @@
   "main": "src/index.ts",
   "type": "commonjs",
   "bin": {
-    "pkg-viz": "out/pkg-viz-cli.js"
+    "pkg-viz-cli": "out/pkg-viz-cli.js"
   },
   "scripts": {
     "compile": "tsc -p ./",
