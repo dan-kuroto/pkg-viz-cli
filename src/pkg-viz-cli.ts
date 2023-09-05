@@ -8,9 +8,16 @@ import { pkgAnalyze } from './utils';
 import { dependencyMap2ChartNode, generateChartHTML, generateChartOption } from './chart';
 
 
-function toInt(obj: any, defaultValue: number = 0) {
+/**
+ * parse `obj` to int, if `invalidCheck(obj)` is true, result is `defaultValue`.
+ */
+function toInt(
+    obj: any,
+    defaultValue: number = 0,
+    invalidCheck: (num: number) => boolean = isNaN
+) {
     let value = parseInt(obj, 10);
-    if (isNaN(value)) {
+    if (invalidCheck(value)) {
         value = defaultValue;
     }
     return value;
@@ -39,17 +46,17 @@ function openBrowser(url: string) {
 }
 
 const options = program.version('1.0.0')
-    .option('-d, --depth <depth>', 'recursion depth')
+    .option('-d, --depth <depth>', 'recursion depth ("Infinity" is valid)', '2')
     .option('--dev', 'show devDependencies', false)
     .option('--json <file-path>', 'output file path')
-    .option('--indent <indent>', 'json indent')
+    .option('--indent <indent>', 'json indent', '2')
     .parse(process.argv)
     .opts();
 
-const depth = toInt(options.depth, Infinity);
+const depth = toInt(options.depth, 2);
 const devShow = Boolean(options.dev);
 const jsonPath = options.json ? String(options.json) : '';
-const indent = toInt(options.indent, 2);
+const indent = toInt(options.indent, 2, num => isNaN(num) || !isFinite(num));
 const runPath = path.dirname((path.dirname(process.argv[1])));
 
 const [dependency, dependencyMap] = pkgAnalyze(process.cwd(), depth, devShow);
