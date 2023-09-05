@@ -1,0 +1,29 @@
+{
+  "name": "pkg-viz-cli",
+  "version": "1.0.0",
+  "description": "A tool for analyzing and visualizing the dependency relationships of NPM packages",
+  "main": "src/index.ts",
+  "type": "commonjs",
+  "bin": {
+    "pkg-viz-cli": "out/pkg-viz-cli.js"
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch",
+    "test": "vitest --run"
+  },
+  "keywords": [],
+  "author": "github.com/dan-kuroto",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.5.8",
+    "@typescript-eslint/eslint-plugin": "^6.5.0",
+    "@typescript-eslint/parser": "^6.5.0",
+    "eslint": "^8.48.0",
+    "typescript": "^5.2.2",
+    "vitest": "^0.34.3"
+  },
+  "dependencies": {
+    "commander": "^11.0.0"
+  }
+}
