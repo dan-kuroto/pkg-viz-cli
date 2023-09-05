@@ -41,7 +41,7 @@ export function generateChartOption(option?: ChartOption): ChartOption {
                     show: true
                 },
                 edgeSymbol: ['circle', 'arrow'],
-                edgeSymbolSize: [4, 10],
+                edgeSymbolSize: [5, 15],
                 edgeLabel: {
                     fontSize: 20
                 },
