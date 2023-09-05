@@ -51,7 +51,11 @@ export function getDependency(pkgDir: string, dependency: Dependency = {}): Depe
  * Analyze the project and return the dependencies
  * @returns Dependency of root package, and map of '{name}\n{version}' -> dependency
  */
-export function pkgAnalyze(rootDir: string, depth: number = Infinity): [Dependency, Map<string, Dependency>] {
+export function pkgAnalyze(
+  rootDir: string,
+  depth: number = Infinity,
+  devShow: boolean = false
+): [Dependency, Map<string, Dependency>] {
   const visited = new Map<string, Dependency>(); // '{name}\n{version}' -> dependency
   const toVisit: Dependency[] = [{ path: rootDir, depth: 0 }]; // dependency
   const root = toVisit[0];
@@ -65,6 +69,9 @@ export function pkgAnalyze(rootDir: string, depth: number = Infinity): [Dependen
     }
     const key = `${dependency.name}\n${dependency.version}`;
     if (visited.has(key)) {
+      continue;
+    }
+    if (dependency.dev === true && !devShow) {
       continue;
     }
     visited.set(key, dependency);

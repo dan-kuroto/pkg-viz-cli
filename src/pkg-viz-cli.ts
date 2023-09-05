@@ -40,18 +40,19 @@ function openBrowser(url: string) {
 
 const options = program.version('1.0.0')
     .option('-d, --depth <depth>', 'recursion depth')
+    .option('--dev', 'show devDependencies', false)
     .option('--json <file-path>', 'output file path')
     .option('--indent <indent>', 'json indent')
     .parse(process.argv)
     .opts();
-// TODO: 添加一个dev参数，是否显示devDependencies
 
 const depth = toInt(options.depth, Infinity);
+const devShow = Boolean(options.dev);
 const jsonPath = options.json ? String(options.json) : '';
 const indent = toInt(options.indent, 2);
 const runPath = path.dirname((path.dirname(process.argv[1])));
 
-const [dependency, dependencyMap] = pkgAnalyze(process.cwd(), depth);
+const [dependency, dependencyMap] = pkgAnalyze(process.cwd(), depth, devShow);
 if (jsonPath) {
     fs.writeFileSync(jsonPath, JSON.stringify(
         dependency,
